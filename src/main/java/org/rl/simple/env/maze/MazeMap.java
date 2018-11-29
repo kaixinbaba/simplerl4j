@@ -45,13 +45,13 @@ public class MazeMap {
         int newX = this.player.x;
         int newY = this.player.y;
         this.map[oldX][oldY] = 0;
-        this.map[newX][newY] = PLAYER;
         boolean done = isDone(this.player);
         Reward reward = reward(this.player);
         StepResult result = new StepResult();
         result.setDone(done);
         result.setReward(reward);
         result.setNextState(new State(this.player.x, this.player.y));
+        this.map[newX][newY] = PLAYER;
         return result;
     }
 

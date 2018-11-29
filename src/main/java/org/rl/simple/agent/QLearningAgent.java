@@ -89,7 +89,7 @@ public class QLearningAgent extends TDAgent {
         Double qValue = this.qtable.get(state).get(action.getCode());
         // 最重要的公式
         Double afterUpdateQValue = qValue + this.learningRate *
-                (reward.getReward() + this.gamma * Collections.max(this.qtable.get(nextState)) - qValue);
+                (reward.getReward() + this.gamma * Collections.max(this.qtable.getOrDefault(nextState, initActionRowList())) - qValue);
         this.qtable.get(state).set(action.getCode(), afterUpdateQValue);
         double epsilon = this.epsilon - this.epsilonDecay;
         if (epsilon > this.epsilonMin) {
@@ -97,5 +97,6 @@ public class QLearningAgent extends TDAgent {
         } else {
             this.epsilon = this.epsilonMin;
         }
+//        System.out.println(this.qtable);
     }
 }

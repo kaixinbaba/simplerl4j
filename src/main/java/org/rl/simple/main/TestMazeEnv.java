@@ -1,18 +1,18 @@
 package org.rl.simple.main;
 
 import org.rl.simple.env.Action;
-import org.rl.simple.env.State;
 import org.rl.simple.env.StepResult;
 import org.rl.simple.env.maze.Maze;
+import org.rl.simple.env.maze.MazeState;
 
 public class TestMazeEnv {
 
     public static void main(String[] args) {
-        Maze maze = new Maze(6, 6, 50L);
+        Maze maze = new Maze(6, 6, 100L);
         int maxEpisode = 10;
         int episode = 0;
         while (episode < maxEpisode) {
-            State state = maze.reset();
+            MazeState state = maze.reset();
             double totalReward = 0.0D;
             while (true) {
                 maze.render();
@@ -24,6 +24,7 @@ public class TestMazeEnv {
                     episode++;
                     break;
                 }
+                state = stepResult.getNextState();
             }
         }
     }

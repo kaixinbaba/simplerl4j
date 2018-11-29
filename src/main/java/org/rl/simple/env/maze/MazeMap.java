@@ -2,7 +2,6 @@ package org.rl.simple.env.maze;
 
 import lombok.Getter;
 import org.rl.simple.env.Reward;
-import org.rl.simple.env.State;
 import org.rl.simple.env.StepResult;
 
 import static org.rl.simple.env.maze.Constants.*;
@@ -50,7 +49,7 @@ public class MazeMap {
         StepResult result = new StepResult();
         result.setDone(done);
         result.setReward(reward);
-        result.setNextState(new State(this.player.x, this.player.y));
+        result.setNextState(new MazeState(this.player.x, this.player.y));
         this.map[newX][newY] = PLAYER;
         return result;
     }
@@ -75,9 +74,9 @@ public class MazeMap {
         }
     }
 
-    public State reset() {
+    public MazeState reset() {
         this.resetMap();
-        return new State(START_X, START_Y);
+        return new MazeState(START_X, START_Y);
     }
 
     class Player {

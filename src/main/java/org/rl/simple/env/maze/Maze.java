@@ -2,10 +2,8 @@ package org.rl.simple.env.maze;
 
 import lombok.Getter;
 import org.apache.commons.lang3.RandomUtils;
+import org.rl.simple.env.*;
 import org.rl.simple.env.Action;
-import org.rl.simple.env.Enviroment;
-import org.rl.simple.env.State;
-import org.rl.simple.env.StepResult;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +13,7 @@ import static org.rl.simple.env.maze.Constants.*;
 /**
  * 简单的走迷宫的环境
  */
-public class Maze extends JFrame implements Enviroment {
+public class Maze extends JFrame implements DispersedEnviroment {
 
 
     private JPanel panel;
@@ -23,26 +21,43 @@ public class Maze extends JFrame implements Enviroment {
     private MazeMap map;
 
     @Getter
+    private int width;
+
+    @Getter
+    private int height;
+
     private int actionCount;
 
     @Getter
     private long everyStepSleepTime;
 
+    private boolean needRender;
     @Getter
+    private boolean isHumanPlay;
+    @Getter
+    private boolean isSlippery;
+    @Getter
+    private double unSlipperyProp;
     private Action[] actionSpace;
 
     public Maze(int width, int height) {
         this(width, height, 100L);
     }
+
     public Maze(int width, int height, long everyStepSleepTime) {
-        this(width, height, everyStepSleepTime, false, 0.0D);
+        this(width, height, everyStepSleepTime, true, false);
     }
 
-    public Maze(int width, int height, long everyStepSleepTime, boolean isSlippery, double unSlipperyProp) {
-        init(width, height, everyStepSleepTime, isSlippery, unSlipperyProp);
+    public Maze(int width, int height, long everyStepSleepTime, boolean needRender, boolean isHumanPlay) {
+        this(width, height, everyStepSleepTime, needRender, isHumanPlay, false, 0.0D);
     }
 
-    private void init(int width, int height, long everyStepSleepTime, boolean isSlippery, double unSlipperyProp) {
+    public Maze(int width, int height, long everyStepSleepTime, boolean needRender, boolean isHumanPlay, boolean isSlippery, double unSlipperyProp) {
+        init(width, height, everyStepSleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp);
+    }
+
+    private void init(int width, int height, long everyStepSleepTime, boolean needRender, boolean isHumanPlay,
+                      boolean isSlippery, double unSlipperyProp) {
         //设置Frame标题
         setTitle("走迷宫");
         //设置窗口背景色
@@ -55,21 +70,30 @@ public class Maze extends JFrame implements Enviroment {
         setLocationRelativeTo(null);
         //设置窗口关闭策略
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //////////////////////////////////////////
+
+        this.width = width;
+        this.height = height;
         this.map = new MazeMap(width, height);
         this.panel = new MazePanel(this.map);
         this.setContentPane(this.panel);
-        this.actionCount = 4;
-        this.actionSpace = new Action[] {
+        this.actionSpace = new Action[]{
                 new Action(UP),
                 new Action(RIGHT),
                 new Action(DOWN),
                 new Action(LEFT),
         };
+        this.actionCount = this.actionCount();
         this.everyStepSleepTime = everyStepSleepTime;
+        this.needRender = needRender;
+        this.isHumanPlay = isHumanPlay;
+        this.isSlippery = isSlippery;
+        this.unSlipperyProp = unSlipperyProp;
+
     }
 
     @Override
-    public State reset() {
+    public MazeState reset() {
         return this.map.reset();
     }
 
@@ -89,8 +113,25 @@ public class Maze extends JFrame implements Enviroment {
 
     @Override
     public void render() {
-        //设置窗口可见
-        setVisible(true);
-        this.panel.repaint();
+//        if (this.needRender) {
+            //设置窗口可见
+            setVisible(true);
+            this.panel.repaint();
+//        }
+    }
+
+    @Override
+    public int actionCount() {
+        return this.actionSpace.length;
+    }
+
+    @Override
+    public int stateCount() {
+        return this.width * this.height;
+    }
+
+    @Override
+    public Action[] actionSpace() {
+        return this.actionSpace;
     }
 }

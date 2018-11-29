@@ -1,8 +1,10 @@
 package org.rl.simple.env;
 
+import org.rl.simple.env.maze.MazeState;
+
 public interface Enviroment {
 
-    State reset();
+    MazeState reset();
 
     Action sampleAction();
 

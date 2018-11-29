@@ -1,12 +1,7 @@
 package org.rl.simple.env;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+public interface State {
 
-@Data
-@AllArgsConstructor
-public class State {
-
-    private int x;
-    private int y;
+    @Override
+    int hashCode();
 }

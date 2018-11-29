@@ -8,5 +8,5 @@ public interface Agent {
 
     Action chooseAction(State state);
 
-    void learn(State state, State nextState, Action action, Reward reward, boolean done);
+    void learn(State state, State nextState, Action action, Action nextAction, Reward reward, boolean done);
 }

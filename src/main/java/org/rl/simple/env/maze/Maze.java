@@ -93,7 +93,7 @@ public class Maze extends JFrame implements DispersedEnviroment {
     }
 
     @Override
-    public MazeState reset() {
+    public State reset() {
         return this.map.reset();
     }
 
@@ -113,11 +113,11 @@ public class Maze extends JFrame implements DispersedEnviroment {
 
     @Override
     public void render() {
-//        if (this.needRender) {
+        if (this.needRender) {
             //设置窗口可见
             setVisible(true);
             this.panel.repaint();
-//        }
+        }
     }
 
     @Override

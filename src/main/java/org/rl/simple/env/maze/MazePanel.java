@@ -10,7 +10,7 @@ public class MazePanel extends JPanel {
     private MazeMap map;
 
     public MazePanel(MazeMap map) {
-        setBackground(Color.WHITE);
+        setBackground(Color.BLACK);
         this.map = map;
     }
 

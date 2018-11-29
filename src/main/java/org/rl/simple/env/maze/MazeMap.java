@@ -2,6 +2,7 @@ package org.rl.simple.env.maze;
 
 import lombok.Getter;
 import org.rl.simple.env.Reward;
+import org.rl.simple.env.State;
 import org.rl.simple.env.StepResult;
 
 import static org.rl.simple.env.maze.Constants.*;
@@ -74,7 +75,7 @@ public class MazeMap {
         }
     }
 
-    public MazeState reset() {
+    public State reset() {
         this.resetMap();
         return new MazeState(START_X, START_Y);
     }

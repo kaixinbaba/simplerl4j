@@ -8,7 +8,7 @@ public class StepResult {
 
     private boolean done;
 
-    private MazeState nextState;
+    private State nextState;
 
     private Reward reward;
 

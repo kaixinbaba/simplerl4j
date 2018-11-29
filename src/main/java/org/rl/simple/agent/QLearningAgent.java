@@ -17,15 +17,16 @@ public class QLearningAgent extends TDAgent {
     private double epsilonDecay;
     private double epsilonMin;
     private double learningRate;
+    private double gamma;
     private Action[] actionSpace;
     private DispersedEnviroment enviroment;
 
     public QLearningAgent(DispersedEnviroment enviroment) {
-        this(enviroment, 1.0D, 0.005D, 0.05D, 0.01D);
+        this(enviroment, 1.0D, 0.005D, 0.05D, 0.01D, 0.9D);
     }
 
     public QLearningAgent(DispersedEnviroment enviroment, double epsilonStart, double epsilonDecay,
-                          double epsilonMin, double learningRate) {
+                          double epsilonMin, double learningRate, double gamma) {
         this.enviroment = enviroment;
         this.actionCount = enviroment.actionCount();
         this.actionSpace = enviroment.actionSpace();
@@ -33,6 +34,7 @@ public class QLearningAgent extends TDAgent {
         this.epsilonDecay = epsilonDecay;
         this.epsilonMin = epsilonMin;
         this.learningRate = learningRate;
+        this.gamma = gamma;
     }
 
 
@@ -84,6 +86,16 @@ public class QLearningAgent extends TDAgent {
 
     @Override
     public void learn(State state, State nextState, Action action, Action nextAction, Reward reward, boolean done) {
-
+        Double qValue = this.qtable.get(state).get(action.getCode());
+        // 最重要的公式
+        Double afterUpdateQValue = qValue + this.learningRate *
+                (reward.getReward() + this.gamma * Collections.max(this.qtable.get(nextState)) - qValue);
+        this.qtable.get(state).set(action.getCode(), afterUpdateQValue);
+        double epsilon = this.epsilon - this.epsilonDecay;
+        if (epsilon > this.epsilonMin) {
+            this.epsilon = epsilon;
+        } else {
+            this.epsilon = this.epsilonMin;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.rl.simple.agent;
 
+import lombok.Getter;
 import org.apache.commons.lang3.RandomUtils;
 import org.rl.simple.env.Action;
 import org.rl.simple.env.DispersedEnviroment;
@@ -10,6 +11,7 @@ import java.util.*;
 
 public class QLearningAgent extends TDAgent {
 
+    @Getter
     private Map<State, List<Double>> qtable = new HashMap<>();
 
     private int actionCount;

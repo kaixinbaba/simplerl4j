@@ -7,16 +7,19 @@ import org.rl.simple.env.State;
 import org.rl.simple.env.StepResult;
 import org.rl.simple.env.maze.Maze;
 
+import java.util.Arrays;
+
 public class TestMazeEnv {
 
     public static void main(String[] args) {
         Maze maze = new Maze(4, 4, 100L);
         Agent agent = new QLearningAgent(maze);
-        int maxEpisode = 10;
+        int maxEpisode = 100;
         int episode = 0;
         while (episode < maxEpisode) {
             State state = maze.reset();
             double totalReward = 0.0D;
+            int count = 0;
             while (true) {
                 maze.render();
 //                Action action = maze.sampleAction();
@@ -30,7 +33,11 @@ public class TestMazeEnv {
                     episode++;
                     break;
                 }
+                if (count % 20 == 0) {
+                    System.out.println(((QLearningAgent) agent).getQtable());
+                }
                 state = stepResult.getNextState();
+                count++;
             }
         }
     }

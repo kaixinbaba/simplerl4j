@@ -105,9 +105,9 @@ public class SarsaAgent extends TDAgent {
     protected void updateQtable(State state, State nextState, Action action, Action nextAction, Reward reward, boolean done) {
 
         Double qValue = this.qtable.get(state).get(action.getCode());
-        // 最重要的公式
+        // sarsa 更新的就是下次行动的q值 on-policy
         Double afterUpdateQValue = qValue + this.learningRate *
-                (reward.getReward() + this.gamma * Collections.max(this.qtable.getOrDefault(nextState, initActionRowList())) - qValue);
+                (reward.getReward() + this.gamma * this.qtable.get(nextState).get(nextAction.getCode()) - qValue);
         this.qtable.get(state).set(action.getCode(), afterUpdateQValue);
     }
 }

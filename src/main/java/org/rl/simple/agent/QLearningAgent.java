@@ -26,7 +26,7 @@ public class QLearningAgent extends SarsaAgent {
     protected void updateQtable(State state, State nextState, Action action, Action nextAction, Reward reward, boolean done) {
 
         Double qValue = this.qtable.get(state).get(action.getCode());
-        // 最重要的公式
+        // qlearning 取的是下一个状态的最大动作q值 off-policy
         Double afterUpdateQValue = qValue + this.learningRate *
                 (reward.getReward() + this.gamma * Collections.max(this.qtable.getOrDefault(nextState, initActionRowList())) - qValue);
         this.qtable.get(state).set(action.getCode(), afterUpdateQValue);

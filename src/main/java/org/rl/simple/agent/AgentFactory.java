@@ -1,5 +1,7 @@
 package org.rl.simple.agent;
 
+import lombok.NonNull;
+import org.rl.simple.common.enums.Algorithm;
 import org.rl.simple.env.DispersedEnviroment;
 import org.rl.simple.env.Enviroment;
 
@@ -8,26 +10,26 @@ import java.util.Map;
 
 public class AgentFactory {
 
-    private static Map<String, Agent> agentCache = new HashMap<>();
+    private static Map<Algorithm, Agent> agentCache = new HashMap<>();
 
 
-    public static Agent get(String code, Enviroment enviroment) {
-        if (agentCache.containsKey(code)) {
-            return agentCache.get(code);
+    public static Agent get(@NonNull Algorithm algorithm, Enviroment enviroment) {
+        if (agentCache.containsKey(algorithm)) {
+            return agentCache.get(algorithm);
         } else {
             Agent agent = null;
-            if (code.equalsIgnoreCase("q-learning")) {
+            if (algorithm.equals(Algorithm.Q_LEARNING)) {
                 agent = new QLearningAgent((DispersedEnviroment) enviroment);
-            } else if (code.equalsIgnoreCase("sarsa")) {
+            } else if (algorithm.equals(Algorithm.SARSA)) {
                 agent = new SarsaAgent((DispersedEnviroment) enviroment);
-            } else if (code.equalsIgnoreCase("dp")) {
+            } else if (algorithm.equals(Algorithm.DYNAMIC_PROGRAMMING)) {
 
-            } else if (code.equalsIgnoreCase("dqn")) {
+            } else if (algorithm.equals(Algorithm.DQN)) {
 
-            } else if (code.equalsIgnoreCase("dpg")) {
+            } else if (algorithm.equals(Algorithm.DPG)) {
 
             }
+            return agent;
         }
-        return null;
     }
 }

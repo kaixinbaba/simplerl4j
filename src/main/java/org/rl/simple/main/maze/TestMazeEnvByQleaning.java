@@ -2,8 +2,6 @@ package org.rl.simple.main.maze;
 
 import org.rl.simple.agent.Agent;
 import org.rl.simple.agent.AgentFactory;
-import org.rl.simple.agent.QLearningAgent;
-import org.rl.simple.common.enums.Algorithm;
 import org.rl.simple.env.Action;
 import org.rl.simple.env.State;
 import org.rl.simple.env.StepResult;
@@ -15,7 +13,16 @@ import static org.rl.simple.common.enums.Algorithm.Q_LEARNING;
 public class TestMazeEnvByQleaning {
 
     public static void main(String[] args) {
-        Maze maze = new Maze(3, 3, 50L);
+        int width = 4;
+        int height = 4;
+        long sleepTime = 50L;
+        boolean needRender = true;
+        boolean isHumanPlay = false;
+        boolean isSlippery = false;
+        double unSlipperyProp = 0.7D;
+        ///////////////////////////////////////////
+        // 初始化 环境
+        Maze maze = new Maze(width, height, sleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp);
         Agent agent = AgentFactory.get(Q_LEARNING, maze);
         int maxEpisode = 100;
         int episode = 0;

@@ -6,7 +6,12 @@ import org.rl.simple.env.*;
 import org.rl.simple.env.Action;
 
 import javax.swing.*;
-import java.awt.*;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.rl.simple.env.maze.Constants.*;
 
@@ -89,7 +94,6 @@ public class Maze extends JFrame implements DispersedEnviroment {
         this.isHumanPlay = isHumanPlay;
         this.isSlippery = isSlippery;
         this.unSlipperyProp = unSlipperyProp;
-
     }
 
     @Override
@@ -108,7 +112,17 @@ public class Maze extends JFrame implements DispersedEnviroment {
             Thread.sleep(this.everyStepSleepTime);
         } catch (InterruptedException e) {
         }
-        return this.map.step(action.getCode());
+        int actionCode = action.getCode();
+        if (isSlippery) {
+            if (RandomUtils.nextDouble(0.0D, 1.0D) > this.unSlipperyProp) {
+                List<Integer> other = new ArrayList<>();
+                other.addAll(Arrays.asList(this.actionSpace)
+                        .stream().map(a -> a.getCode()).collect(Collectors.toList()));
+                other.remove(actionCode);
+                actionCode = other.get(RandomUtils.nextInt(0, other.size()));
+            }
+        }
+        return this.map.step(actionCode);
     }
 
     @Override

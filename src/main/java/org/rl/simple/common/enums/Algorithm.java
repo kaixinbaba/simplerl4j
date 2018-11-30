@@ -4,6 +4,7 @@ public enum Algorithm {
 
     Q_LEARNING("q-learning"),
     SARSA("sarsa"),
+    SARSA_EXPECTED("sarsa-expected"),
     DYNAMIC_PROGRAMMING("dp"),
     DQN("dqn"),
     DPG("dpg");

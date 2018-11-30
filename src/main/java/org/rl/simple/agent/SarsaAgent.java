@@ -66,7 +66,7 @@ public class SarsaAgent extends TDAgent {
      * @param actionExpectedReward
      * @return
      */
-    private int getMaxActionIndex(List<Double> actionExpectedReward) {
+    protected int getMaxActionIndex(List<Double> actionExpectedReward) {
         Double max = Collections.max(actionExpectedReward);
         List<Integer> maxIndex = new ArrayList<>(actionExpectedReward.size());
         for (int i = 0; i < actionExpectedReward.size(); i++) {
@@ -107,7 +107,7 @@ public class SarsaAgent extends TDAgent {
         Double qValue = this.qtable.get(state).get(action.getCode());
         // sarsa 更新的就是下次行动的q值 on-policy
         Double afterUpdateQValue = qValue + this.learningRate *
-                (reward.getReward() + this.gamma * this.qtable.get(nextState).get(nextAction.getCode()) - qValue);
+                (reward.getReward() + this.gamma * this.qtable.getOrDefault(nextState, initActionRowList()).get(nextAction.getCode()) - qValue);
         this.qtable.get(state).set(action.getCode(), afterUpdateQValue);
     }
 }

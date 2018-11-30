@@ -22,6 +22,8 @@ public class AgentFactory {
                 agent = new QLearningAgent((DispersedEnviroment) enviroment);
             } else if (algorithm.equals(Algorithm.SARSA)) {
                 agent = new SarsaAgent((DispersedEnviroment) enviroment);
+            } else if (algorithm.equals(Algorithm.SARSA_EXPECTED)) {
+                agent = new SarsaExpectedAgent((DispersedEnviroment) enviroment);
             } else if (algorithm.equals(Algorithm.DYNAMIC_PROGRAMMING)) {
 
             } else if (algorithm.equals(Algorithm.DQN)) {
@@ -29,6 +31,7 @@ public class AgentFactory {
             } else if (algorithm.equals(Algorithm.DPG)) {
 
             }
+            agentCache.put(algorithm, agent);
             return agent;
         }
     }

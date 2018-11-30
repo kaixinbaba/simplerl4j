@@ -7,12 +7,10 @@ import org.rl.simple.env.State;
 import org.rl.simple.env.StepResult;
 import org.rl.simple.env.maze.Maze;
 
-import java.util.Arrays;
-
 public class TestMazeEnv {
 
     public static void main(String[] args) {
-        Maze maze = new Maze(4, 4, 50L);
+        Maze maze = new Maze(3, 3, 50L);
         Agent agent = new QLearningAgent(maze);
         int maxEpisode = 100;
         int episode = 0;
@@ -27,19 +25,20 @@ public class TestMazeEnv {
                 StepResult stepResult = maze.step(action);
                 agent.learn(state, stepResult.getNextState(), action, null, stepResult.getReward(),
                         stepResult.isDone());
-                totalReward += stepResult.getReward().getReward();
+                double reward = stepResult.getReward().getReward();
+                totalReward += reward;
                 if (stepResult.isDone()) {
-                    System.out.println(String.format("Episode : %s, Total reward : %s", episode, totalReward));
-                    System.out.println(String.format("Use total step count : %s", stepCount));
+                    System.out.println(reward == 10.0D
+                            ? "Win!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" : "You lose");
+                    System.out.println(String.format("Episode : %s, Total reward : %s Use total step count : %s",
+                            episode, totalReward, stepCount));
                     episode++;
                     break;
                 }
-//                if (count % 20 == 0) {
-//                    System.out.println(((QLearningAgent) agent).getQtable());
-//                }
                 state = stepResult.getNextState();
                 stepCount++;
             }
         }
+        return;
     }
 }

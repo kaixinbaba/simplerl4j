@@ -24,7 +24,7 @@ public class QLearningAgent extends TDAgent {
     private DispersedEnviroment enviroment;
 
     public QLearningAgent(DispersedEnviroment enviroment) {
-        this(enviroment, 1.0D, 0.005D, 0.05D, 0.01D, 0.9D);
+        this(enviroment, 1.0D, 0.1D, 0.0D, 0.1D, 0.9D);
     }
 
     public QLearningAgent(DispersedEnviroment enviroment, double epsilonStart, double epsilonDecay,

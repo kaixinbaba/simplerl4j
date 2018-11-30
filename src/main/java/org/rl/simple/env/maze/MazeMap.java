@@ -58,11 +58,11 @@ public class MazeMap {
     private Reward reward(Player player) {
         int code = this.map[player.x][player.y];
         if (code == TRAP) {
-            return new Reward(-5.0D);
+            return new Reward(-10.0D);
         } else if (code == GOAL) {
-            return new Reward(5.0D);
+            return new Reward(10.0D);
         } else {
-            return new Reward(-1.0D);
+            return new Reward(-0.1D);
         }
     }
 

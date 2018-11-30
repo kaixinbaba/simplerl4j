@@ -15,4 +15,9 @@ public class MazeState implements State {
     public int hashCode() {
         return this.x * 100 + this.y;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        return this.hashCode() == object.hashCode();
+    }
 }

@@ -21,10 +21,10 @@ public class Maze extends JFrame implements DispersedEnviroment {
     private MazeMap map;
 
     @Getter
-    private int width;
+    private int mazeWidth;
 
     @Getter
-    private int height;
+    private int mazeHeight;
 
     private int actionCount;
 
@@ -72,8 +72,8 @@ public class Maze extends JFrame implements DispersedEnviroment {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //////////////////////////////////////////
 
-        this.width = width;
-        this.height = height;
+        this.mazeWidth = width;
+        this.mazeHeight = height;
         this.map = new MazeMap(width, height);
         this.panel = new MazePanel(this.map);
         this.setContentPane(this.panel);
@@ -127,7 +127,7 @@ public class Maze extends JFrame implements DispersedEnviroment {
 
     @Override
     public int stateCount() {
-        return this.width * this.height;
+        return this.mazeWidth * this.mazeHeight;
     }
 
     @Override

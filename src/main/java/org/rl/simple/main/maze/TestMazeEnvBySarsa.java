@@ -15,7 +15,16 @@ import static org.rl.simple.common.enums.Algorithm.SARSA;
 public class TestMazeEnvBySarsa {
 
     public static void main(String[] args) {
-        Maze maze = new Maze(4, 4, 50L);
+        int width = 4;
+        int height = 4;
+        long sleepTime = 50L;
+        boolean needRender = true;
+        boolean isHumanPlay = false;
+        boolean isSlippery = false;
+        double unSlipperyProp = 0.7D;
+        ///////////////////////////////////////////
+        // 初始化 环境
+        Maze maze = new Maze(width, height, sleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp);
         Agent agent = AgentFactory.get(SARSA, maze);
         int maxEpisode = 100;
         int episode = 0;

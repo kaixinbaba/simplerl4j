@@ -13,8 +13,8 @@ import static org.rl.simple.common.enums.Algorithm.Q_LEARNING;
 public class TestMazeEnvByQleaning {
 
     public static void main(String[] args) {
-        int width = 4;
-        int height = 4;
+        int width = 8;
+        int height = 8;
         long sleepTime = 50L;
         boolean needRender = true;
         boolean isHumanPlay = false;

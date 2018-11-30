@@ -2,6 +2,13 @@ package org.rl.simple;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
+import org.rl.simple.utils.JsonSerilizable;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class JUnitTest {
 
@@ -17,5 +24,24 @@ public class JUnitTest {
             System.out.println(RandomUtils.nextDouble(0.0, 1.0));
 
         }
+    }
+    @Test
+    public void testToFile() throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        map.put("l", list);
+        map.put("2", list);
+        map.put("3", "dfdf");
+        map.put("4", "dfdkdf");
+        String result = JsonSerilizable.serilizableForMap(map, "test.json");
+        System.out.println(result);
+    }
+    @Test
+    public void testFromFile() throws IOException {
+        Map<String, Object> stringObjectHashMap = JsonSerilizable.deserilizableForMapFromFile("test.json");
+        System.out.println(stringObjectHashMap);
     }
 }

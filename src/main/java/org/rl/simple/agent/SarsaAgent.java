@@ -92,6 +92,16 @@ public class SarsaAgent extends TDAgent {
         updateEpsilon();
     }
 
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public void load() {
+
+    }
+
     protected void updateEpsilon() {
         double epsilon = this.epsilon - this.epsilonDecay;
         if (epsilon > this.epsilonMin) {

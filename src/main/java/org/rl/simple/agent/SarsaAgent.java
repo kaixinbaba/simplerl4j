@@ -6,7 +6,9 @@ import org.rl.simple.env.Action;
 import org.rl.simple.env.DispersedEnviroment;
 import org.rl.simple.env.Reward;
 import org.rl.simple.env.State;
+import org.rl.simple.utils.JsonSerilizable;
 
+import java.io.IOException;
 import java.util.*;
 
 public class SarsaAgent extends TDAgent {
@@ -94,12 +96,27 @@ public class SarsaAgent extends TDAgent {
 
     @Override
     public void save() {
+        try {
+            JsonSerilizable.serilizableForMap(this.qtable, getSaveFilePath());
+        } catch (Exception e) {
+            System.out.println("Save error!");
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public String getSaveFilePath() {
+        return "sarsa.json";
     }
 
     @Override
     public void load() {
-
+        try {
+            this.qtable = JsonSerilizable.deserilizableForMapFromFile(getSaveFilePath());
+        } catch (Exception e) {
+            System.out.println("Load error!");
+            e.printStackTrace();
+        }
     }
 
     protected void updateEpsilon() {

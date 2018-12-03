@@ -7,6 +7,8 @@ import org.rl.simple.env.State;
 import org.rl.simple.env.StepResult;
 import org.rl.simple.env.maze.Maze;
 
+import java.util.concurrent.ArrayBlockingQueue;
+
 import static org.rl.simple.common.enums.Algorithm.Q_LEARNING;
 
 @SuppressWarnings("all")
@@ -24,6 +26,8 @@ public class TestMazeEnvByQleaning {
         // 初始化 环境
         Maze maze = new Maze(width, height, sleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp);
         Agent agent = AgentFactory.get(Q_LEARNING, maze);
+        // TODO 要一个定长的集合 并且自动弹出最早的元素
+        ArrayBlockingQueue<Integer> lastFiveEpisode = new ArrayBlockingQueue<>(5);
         int maxEpisode = 100;
         int episode = 0;
         while (episode < maxEpisode) {

@@ -13,4 +13,7 @@ public interface Agent {
     void save();
 
     void load();
+
+    String getSaveFilePath();
+
 }

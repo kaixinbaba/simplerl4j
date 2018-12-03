@@ -31,4 +31,9 @@ public class QLearningAgent extends SarsaAgent {
                 (reward.getReward() + this.gamma * Collections.max(this.qtable.getOrDefault(nextState, initActionRowList())) - qValue);
         this.qtable.get(state).set(action.getCode(), afterUpdateQValue);
     }
+
+    @Override
+    public String getSaveFilePath() {
+        return "qlearning.json";
+    }
 }

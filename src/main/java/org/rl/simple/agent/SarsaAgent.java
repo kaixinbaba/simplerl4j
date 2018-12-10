@@ -16,6 +16,8 @@ public class SarsaAgent extends TDAgent {
     @Getter
     protected Map<State, List<Double>> qtable = new HashMap<>();
 
+    protected static final double EPSILON_MIN = 0.0D;
+
     protected int actionCount;
     protected double epsilon;
     protected double epsilonDecay;
@@ -26,7 +28,7 @@ public class SarsaAgent extends TDAgent {
     protected DispersedEnviroment enviroment;
 
     public SarsaAgent(DispersedEnviroment enviroment) {
-        this(enviroment, 1.0D, 0.1D, 0.0D, 0.1D, 0.9D);
+        this(enviroment, 1.0D, 0.1D, EPSILON_MIN, 0.1D, 0.9D);
     }
 
     public SarsaAgent(DispersedEnviroment enviroment, double epsilonStart, double epsilonDecay,
@@ -41,6 +43,9 @@ public class SarsaAgent extends TDAgent {
         this.gamma = gamma;
     }
 
+    public void setEpsilon(double epsilon) {
+        this.epsilon = epsilon;
+    }
 
     @Override
     public Action chooseAction(State state) {
@@ -95,13 +100,8 @@ public class SarsaAgent extends TDAgent {
     }
 
     @Override
-    public void save() {
-        try {
-            JsonSerilizable.serilizableForMap(this.qtable, getSaveFilePath());
-        } catch (Exception e) {
-            System.out.println("Save error!");
-            e.printStackTrace();
-        }
+    public void save() throws IOException {
+        JsonSerilizable.serilizableForMap(this.qtable, getSaveFilePath());
     }
 
     @Override
@@ -110,13 +110,9 @@ public class SarsaAgent extends TDAgent {
     }
 
     @Override
-    public void load() {
-        try {
-            this.qtable = JsonSerilizable.deserilizableForMapFromFile(getSaveFilePath());
-        } catch (Exception e) {
-            System.out.println("Load error!");
-            e.printStackTrace();
-        }
+    public void load() throws IOException {
+        this.qtable = JsonSerilizable.deserilizableForMapFromFile(getSaveFilePath());
+        this.epsilon = EPSILON_MIN;
     }
 
     protected void updateEpsilon() {

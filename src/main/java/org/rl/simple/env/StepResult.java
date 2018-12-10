@@ -8,6 +8,8 @@ public class StepResult {
 
     private boolean done;
 
+    private boolean isWin;
+
     private State nextState;
 
     private Reward reward;

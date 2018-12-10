@@ -51,6 +51,7 @@ public class MazeMap {
         result.setDone(done);
         result.setReward(reward);
         result.setNextState(new MazeState(this.player.x, this.player.y));
+        result.setWin(reward.getReward() == 10.0D);
         this.map[newX][newY] = PLAYER;
         return result;
     }

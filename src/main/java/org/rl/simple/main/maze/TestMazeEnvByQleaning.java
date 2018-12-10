@@ -17,8 +17,8 @@ import static org.rl.simple.common.enums.Algorithm.Q_LEARNING;
 public class TestMazeEnvByQleaning {
 
     public static void main(String[] args) {
-        int width = 8;
-        int height = 8;
+        int width = 4;
+        int height = 4;
         int minStepCount = width + height - 2;
         double allowError = 0.5D;
         long sleepTime = 50L;
@@ -36,6 +36,7 @@ public class TestMazeEnvByQleaning {
         } catch (IOException e) {
             System.out.println("load failed!!!");
         }
+        agent.printQTable();
         int howLongToAve = 5;
         FIFOSimpleQueue<Integer> lastFiveEpisode = new FIFOSimpleQueue<>(howLongToAve);
         int maxEpisode = 100;
@@ -57,19 +58,23 @@ public class TestMazeEnvByQleaning {
                             ? "Win!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" : "You lose");
                     System.out.println(String.format("Episode : %s, Total reward : %s Use total step count : %s",
                             episode, totalReward, stepCount));
-                    // add
-                    lastFiveEpisode.add(stepCount);
-                    // average
-                    // TODO 要连续5次都是win
-                    double ave = lastFiveEpisode.stream().reduce((i1, i2) -> i1 + i2).get() / howLongToAve;
-                    if (lastFiveEpisode.size() == howLongToAve && ave - minStepCount <= allowError) {
-                        try {
-                            agent.save();
-                            System.out.println("save success!!!");
-                        } catch (IOException e) {
-                            System.out.println("save failed!!!");
+                    if (stepResult.isWin()) {
+                        // add
+                        lastFiveEpisode.add(stepCount);
+                        // average
+                        double ave = lastFiveEpisode.stream().reduce((i1, i2) -> i1 + i2).get() / howLongToAve;
+                        if (lastFiveEpisode.size() == howLongToAve && ave - minStepCount <= allowError) {
+                            try {
+                                agent.save();
+                                System.out.println("save success!!!");
+                                System.exit(0);
+                            } catch (Exception e) {
+                                System.out.println("save failed!!!");
+                                break;
+                            }
                         }
-                        return;
+                    } else {
+                        lastFiveEpisode.clear();
                     }
                     episode++;
                     break;

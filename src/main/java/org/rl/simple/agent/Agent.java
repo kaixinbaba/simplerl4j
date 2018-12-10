@@ -18,4 +18,6 @@ public interface Agent {
 
     String getSaveFilePath();
 
+    void printQTable();
+
 }

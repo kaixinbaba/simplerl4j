@@ -110,6 +110,11 @@ public class SarsaAgent extends TDAgent {
     }
 
     @Override
+    public void printQTable() {
+        System.out.println(this.qtable);
+    }
+
+    @Override
     public void load() throws IOException {
         this.qtable = JsonSerilizable.deserilizableForMapFromFile(getSaveFilePath());
         this.epsilon = EPSILON_MIN;

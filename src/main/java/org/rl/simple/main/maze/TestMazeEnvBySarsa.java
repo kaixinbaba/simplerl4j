@@ -2,8 +2,6 @@ package org.rl.simple.main.maze;
 
 import org.rl.simple.agent.Agent;
 import org.rl.simple.agent.AgentFactory;
-import org.rl.simple.agent.QLearningAgent;
-import org.rl.simple.common.enums.Algorithm;
 import org.rl.simple.env.Action;
 import org.rl.simple.env.State;
 import org.rl.simple.env.StepResult;

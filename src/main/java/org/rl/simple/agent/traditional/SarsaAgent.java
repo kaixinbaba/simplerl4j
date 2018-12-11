@@ -1,4 +1,4 @@
-package org.rl.simple.agent;
+package org.rl.simple.agent.traditional;
 
 import lombok.Getter;
 import org.apache.commons.lang3.RandomUtils;

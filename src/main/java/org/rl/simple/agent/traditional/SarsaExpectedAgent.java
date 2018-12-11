@@ -1,11 +1,10 @@
-package org.rl.simple.agent;
+package org.rl.simple.agent.traditional;
 
 import org.rl.simple.env.Action;
 import org.rl.simple.env.DispersedEnviroment;
 import org.rl.simple.env.Reward;
 import org.rl.simple.env.State;
 
-import java.util.Collections;
 import java.util.List;
 
 /**

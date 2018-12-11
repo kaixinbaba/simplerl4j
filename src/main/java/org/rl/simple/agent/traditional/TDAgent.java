@@ -1,5 +1,6 @@
-package org.rl.simple.agent;
+package org.rl.simple.agent.traditional;
 
+import org.rl.simple.agent.Agent;
 import org.rl.simple.env.Action;
 import org.rl.simple.env.Reward;
 import org.rl.simple.env.State;

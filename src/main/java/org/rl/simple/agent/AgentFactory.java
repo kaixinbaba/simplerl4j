@@ -2,12 +2,14 @@ package org.rl.simple.agent;
 
 import lombok.NonNull;
 import org.rl.simple.agent.nn.DeepQLearning;
+import org.rl.simple.agent.traditional.DPAgent;
 import org.rl.simple.agent.traditional.QLearningAgent;
 import org.rl.simple.agent.traditional.SarsaAgent;
 import org.rl.simple.agent.traditional.SarsaExpectedAgent;
 import org.rl.simple.common.enums.Algorithm;
 import org.rl.simple.env.DispersedEnviroment;
 import org.rl.simple.env.Enviroment;
+import org.rl.simple.env.ModelBasedDispersedEnviroment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class AgentFactory {
             } else if (algorithm.equals(Algorithm.SARSA_EXPECTED)) {
                 agent = new SarsaExpectedAgent((DispersedEnviroment) enviroment);
             } else if (algorithm.equals(Algorithm.DYNAMIC_PROGRAMMING)) {
-
+                agent = new DPAgent((ModelBasedDispersedEnviroment) enviroment);
             } else if (algorithm.equals(Algorithm.DQN)) {
                 agent = new DeepQLearning((DispersedEnviroment) enviroment);
             } else if (algorithm.equals(Algorithm.DPG)) {

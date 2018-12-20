@@ -23,6 +23,7 @@ public class Maze extends JFrame implements DispersedEnviroment {
 
     private JPanel panel;
 
+    @Getter
     private MazeMap map;
 
     @Getter

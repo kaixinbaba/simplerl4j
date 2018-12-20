@@ -38,6 +38,12 @@ public class MazeMap {
         this.player = new Player(START_X, START_Y, this);
     }
 
+    public boolean setState(MazeState state) {
+        this.player.x = state.getX();
+        this.player.y = state.getY();
+        return isDone(this.player);
+    }
+
     public synchronized StepResult step(int action) {
         int oldX = this.player.x;
         int oldY = this.player.y;

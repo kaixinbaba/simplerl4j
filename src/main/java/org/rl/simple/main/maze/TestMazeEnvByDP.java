@@ -31,12 +31,6 @@ public class TestMazeEnvByDP {
         // 初始化 环境
         Maze maze = new ModelBasedMaze(width, height, sleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp);
         Agent agent = AgentFactory.get(DYNAMIC_PROGRAMMING, maze);
-        try {
-            agent.load();
-            System.out.println("load success!!!");
-        } catch (IOException e) {
-            System.out.println("load failed!!!");
-        }
         agent.printQTable();
         int howLongToAve = 5;
         FIFOSimpleQueue<Integer> lastFiveEpisode = new FIFOSimpleQueue<>(howLongToAve);
@@ -65,14 +59,7 @@ public class TestMazeEnvByDP {
                         // average
                         double ave = lastFiveEpisode.stream().reduce((i1, i2) -> i1 + i2).get() / howLongToAve;
                         if (lastFiveEpisode.size() == howLongToAve && ave - minStepCount <= allowError) {
-                            try {
-                                agent.save();
-                                System.out.println("save success!!!");
-                                System.exit(0);
-                            } catch (Exception e) {
-                                System.out.println("save failed!!!");
-                                break;
-                            }
+                            break;
                         }
                     } else {
                         lastFiveEpisode.clear();

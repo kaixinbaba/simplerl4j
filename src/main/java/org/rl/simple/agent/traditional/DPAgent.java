@@ -1,32 +1,108 @@
 package org.rl.simple.agent.traditional;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.rl.simple.agent.Agent;
 import org.rl.simple.env.*;
+import org.rl.simple.env.maze.MazeState;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DPAgent implements Agent {
 
-    private static final Double THETA = 0.000001D;
-    private final Map<State, Double> stateValue = new HashMap<>();
+    private static final Double THETA = 0.01D;
     private static final Double GAMMA = 1.0D;
+    private Map<MazeState, List<Double>> piStar;
+
+    private ModelBasedDispersedEnviroment enviroment;
 
     public DPAgent(ModelBasedDispersedEnviroment enviroment) {
-        Map<State, List<Double>> policy = initPolicy(enviroment);
+        this.enviroment = enviroment;
+
+        System.out.println("开始看攻略！");
+        Map<MazeState, List<Double>> policy = initPolicy(enviroment);
+        int i = 0;
         while (true) {
             // 策略迭代
+            Map<MazeState, Double> v = evalStateValue(policy, enviroment);
+            Map<MazeState, List<Double>> newPolicy = impovePolicy(v, enviroment);
+            if (ifStable(policy, newPolicy)) {
+                this.piStar = newPolicy;
+                break;
+            }
+            policy = newPolicy;
+            System.out.println(String.format("迭代 %s 次", ++i));
+            if (i % 10 == 0) {
+                System.out.println(policy);
+                System.out.println(newPolicy);
+                System.out.println("---------------");
+            }
         }
+        System.out.println("攻略看完了！");
     }
 
-    private Map<State, Double> evalStateValue(Map<State, List<Double>> policy, ModelBasedDispersedEnviroment enviroment) {
-        Map<State, Double> v = new HashMap<>();
-        while (true) {
+    private boolean ifStable(Map<MazeState, List<Double>> policy, Map<MazeState, List<Double>> newPolicy) {
+        for (MazeState s : policy.keySet()) {
+            List<Double> p = policy.get(s);
+            List<Double> np = newPolicy.get(s);
+            if (!(p.containsAll(np) && np.containsAll(p))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Map<MazeState, List<Double>> impovePolicy(Map<MazeState, Double> v, ModelBasedDispersedEnviroment enviroment) {
+        Map<MazeState, List<Double>> policy = new HashMap<>();
+        Map<MazeState, List<Double>> q= v2q(v, enviroment);
+        for (MazeState s : v.keySet()) {
+            List<Double> actionValues = q.get(s);
+            List<Integer> index = getMaxIndex(actionValues);
+            Double prop = 1.0 / index.size();
+            List<Double> newProps = new ArrayList<>();
+            for (int i = 0; i < enviroment.actionCount(); i++) {
+                if (index.contains(i)) {
+                    newProps.add(prop);
+                } else {
+                    newProps.add(0.0D);
+                }
+            }
+            policy.put(s, newProps);
+        }
+        return policy;
+    }
+
+    private List<Integer> getMaxIndex(List<Double> actionValues) {
+        Double max = Collections.max(actionValues);
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < actionValues.size() - 1; i++) {
+            if (actionValues.get(i).equals(max)) {
+                result.add(i);
+            }
+        }
+        return result;
+    }
+
+    private Map<MazeState, List<Double>> v2q(Map<MazeState, Double> v, ModelBasedDispersedEnviroment enviroment) {
+        Map<MazeState, List<Double>> q = new HashMap<>();
+        for (MazeState s : v.keySet()) {
+            List<Double> actionValue = new ArrayList<>();
+            for (int i = 0; i < enviroment.actionCount(); i++) {
+                ModelBasedDispersedEnviroment.StateTransitionProbability p = enviroment.p(s, i);
+                Double av = p.getReward() + GAMMA * v.get(p.getNextState());
+                actionValue.add(av);
+            }
+            q.put(s, actionValue);
+        }
+        return q;
+    }
+
+    private Map<MazeState, Double> evalStateValue(Map<MazeState, List<Double>> policy, ModelBasedDispersedEnviroment enviroment) {
+        Map<MazeState, Double> v = new HashMap<>();
+        int count = 0;
+        while (count < 100000) {
             Double delta = 0.0D;
-            for (State s : policy.keySet()) {
+            for (MazeState s : policy.keySet()) {
                 Double value = 0.0D;
                 List<Double> props = policy.get(s);
                 for (int i = 0; i < props.size() - 1; i++) {
@@ -37,25 +113,35 @@ public class DPAgent implements Agent {
                     Double reward = p.getReward();
                     value += tranProp * prop * (reward + GAMMA * v.getOrDefault(nextState, 0.0D));
                 }
-                delta = Math.max(delta, Math.abs(v.get(s) - value));
+                delta = Math.max(delta, Math.abs(v.getOrDefault(s, 0.0D) - value));
                 v.put(s, value);
             }
             if (delta < THETA) {
+                System.out.println(delta);
+                System.out.println(THETA);
                 break;
             }
+            if (count % 10000 == 0) {
+                System.out.println(String.format("评估迭代 %s 次", count));
+                System.out.println(delta);
+                System.out.println(THETA);
+                System.out.println("---------------");
+            }
+            count++;
+
         }
         return v;
     }
 
-    private Map<State, List<Double>> initPolicy(ModelBasedDispersedEnviroment enviroment) {
-        Map<State, List<Double>> policy = new HashMap<>();
+    private Map<MazeState, List<Double>> initPolicy(ModelBasedDispersedEnviroment enviroment) {
+        Map<MazeState, List<Double>> policy = new HashMap<>();
         Double probability = 1.0 / enviroment.actionCount();
         for (State s : enviroment.getStates()) {
             List<Double> actionProp = new ArrayList<>();
             for (int i = 0; i < enviroment.actionCount(); i++) {
                 actionProp.add(probability);
             }
-            policy.put(s, actionProp);
+            policy.put((MazeState)s, actionProp);
         }
         return policy;
     }
@@ -63,7 +149,10 @@ public class DPAgent implements Agent {
 
     @Override
     public Action chooseAction(State state) {
-        return null;
+        List<Double> doubles = this.piStar.get(state);
+        List<Integer> maxIndex = getMaxIndex(doubles);
+        Action a = this.enviroment.actionSpace()[RandomUtils.nextInt(0, maxIndex.size())];
+        return a;
     }
 
     @Override
@@ -88,6 +177,6 @@ public class DPAgent implements Agent {
 
     @Override
     public void printQTable() {
-
+        System.out.println(piStar);
     }
 }

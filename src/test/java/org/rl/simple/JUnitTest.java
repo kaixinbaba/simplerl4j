@@ -21,7 +21,7 @@ public class JUnitTest {
     @Test
     public void test1() {
         for (int i = 0; i < 10; i++) {
-            System.out.println(RandomUtils.nextDouble(0.0, 1.0));
+            System.out.println(RandomUtils.nextInt(0, 2));
 
         }
     }

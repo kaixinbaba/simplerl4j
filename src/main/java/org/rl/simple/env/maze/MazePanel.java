@@ -31,6 +31,8 @@ public class MazePanel extends JPanel {
             return Color.RED;
         } else if (code == TRAP) {
             return Color.BLACK;
+        } else if (code == MOUNTAIN) {
+            return Color.BLUE;
         } else if (code == GOAL) {
             return Color.YELLOW;
         } else {

@@ -10,7 +10,7 @@ import java.util.*;
 
 public class DPAgent implements Agent {
 
-    private static final Double THETA = 0.01D;
+    private static final Double THETA = 0.0000001D;
     private static final Double GAMMA = 1.0D;
     private Map<MazeState, List<Double>> piStar;
 
@@ -75,7 +75,7 @@ public class DPAgent implements Agent {
     private List<Integer> getMaxIndex(List<Double> actionValues) {
         Double max = Collections.max(actionValues);
         List<Integer> result = new ArrayList<>();
-        for (int i = 0; i < actionValues.size() - 1; i++) {
+        for (int i = 0; i < actionValues.size(); i++) {
             if (actionValues.get(i).equals(max)) {
                 result.add(i);
             }
@@ -89,7 +89,10 @@ public class DPAgent implements Agent {
             List<Double> actionValue = new ArrayList<>();
             for (int i = 0; i < enviroment.actionCount(); i++) {
                 ModelBasedDispersedEnviroment.StateTransitionProbability p = enviroment.p(s, i);
-                Double av = p.getReward() + GAMMA * v.get(p.getNextState());
+                if (p == null) {
+                    continue;
+                }
+                Double av = p.getReward() + GAMMA * v.getOrDefault(p.getNextState(), 0.0D);
                 actionValue.add(av);
             }
             q.put(s, actionValue);
@@ -100,18 +103,27 @@ public class DPAgent implements Agent {
     private Map<MazeState, Double> evalStateValue(Map<MazeState, List<Double>> policy, ModelBasedDispersedEnviroment enviroment) {
         Map<MazeState, Double> v = new HashMap<>();
         int count = 0;
-        while (count < 100000) {
+        while (true) {
             Double delta = 0.0D;
             for (MazeState s : policy.keySet()) {
                 Double value = 0.0D;
+                if (this.enviroment.isDoneState(s)) {
+                    v.put(s, 0.0D);
+                    continue;
+                }
                 List<Double> props = policy.get(s);
-                for (int i = 0; i < props.size() - 1; i++) {
+                for (int i = 0; i < props.size(); i++) {
                     Double prop = props.get(i);
                     ModelBasedDispersedEnviroment.StateTransitionProbability p = enviroment.p(s, i);
                     State nextState = p.getNextState();
                     Double tranProp = p.getProp();
                     Double reward = p.getReward();
-                    value += tranProp * prop * (reward + GAMMA * v.getOrDefault(nextState, 0.0D));
+                    boolean done = p.isDone();
+                    Double nextValue = 0.0D;
+                    if (!done) {
+                        nextValue = v.getOrDefault(nextState, 0.0D);
+                    }
+                    value += tranProp * prop * (reward + GAMMA * nextValue);
                 }
                 delta = Math.max(delta, Math.abs(v.getOrDefault(s, 0.0D) - value));
                 v.put(s, value);
@@ -151,7 +163,7 @@ public class DPAgent implements Agent {
     public Action chooseAction(State state) {
         List<Double> doubles = this.piStar.get(state);
         List<Integer> maxIndex = getMaxIndex(doubles);
-        Action a = this.enviroment.actionSpace()[RandomUtils.nextInt(0, maxIndex.size())];
+        Action a = this.enviroment.actionSpace()[maxIndex.get(RandomUtils.nextInt(0, maxIndex.size()))];
         return a;
     }
 

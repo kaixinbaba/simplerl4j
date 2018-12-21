@@ -18,8 +18,8 @@ import static org.rl.simple.common.enums.Algorithm.Q_LEARNING;
 public class TestMazeEnvByDP {
 
     public static void main(String[] args) {
-        int width = 4;
-        int height = 4;
+        int width = 2;
+        int height = 2;
         int minStepCount = width + height - 2;
         double allowError = 0.5D;
         long sleepTime = 50L;
@@ -43,6 +43,7 @@ public class TestMazeEnvByDP {
             while (true) {
                 maze.render();
                 Action action = agent.chooseAction(state);
+//                Action action = maze.sampleAction();
                 StepResult stepResult = maze.step(action);
                 agent.learn(state, stepResult.getNextState(), action, null, stepResult.getReward(),
                         stepResult.isDone());

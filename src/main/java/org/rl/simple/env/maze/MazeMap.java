@@ -5,6 +5,8 @@ import org.rl.simple.env.Reward;
 import org.rl.simple.env.State;
 import org.rl.simple.env.StepResult;
 
+import java.util.Arrays;
+
 import static org.rl.simple.env.maze.Constants.*;
 
 @Getter
@@ -20,28 +22,41 @@ public class MazeMap {
     private Player player;
 
     public MazeMap(int width, int height) {
+        this(width, height, false);
+    }
+    public MazeMap(int width, int height, boolean dp) {
         // 全0初始化
         this.width = width;
         this.height = height;
-        this.resetMap();
+        this.resetMap(dp);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                System.out.println(String.format("%s, %s  --> %s", i, j, this.map[i][j]));
+
+            }
+        }
     }
 
-    private void resetMap() {
+    private void resetMap(boolean dp) {
         this.map = new int[width][height];
         // 从左上角开始游戏
         this.map[START_X][START_Y] = PLAYER;
         // 终点在右下角
         this.map[width - 1][height - 1] = GOAL;
-        // 两个陷阱 写死位置
-        this.map[width - 1][height - 2] = TRAP;
-        this.map[width / 2][height / 2] = TRAP;
+        if (dp) {
+            // dp 不用陷阱 用 大山
+            this.map[width - 1][0] = MOUNTAIN;
+        } else {
+            // 两个陷阱 写死位置
+            this.map[width - 1][height - 2] = TRAP;
+            this.map[width / 2][height / 2] = TRAP;
+        }
         this.player = new Player(START_X, START_Y, this);
     }
 
-    public boolean setState(MazeState state) {
+    public void setState(MazeState state) {
         this.player.x = state.getX();
         this.player.y = state.getY();
-        return isDone(this.player);
     }
 
     public synchronized StepResult step(int action) {
@@ -68,13 +83,14 @@ public class MazeMap {
             return new Reward(-10.0D);
         } else if (code == GOAL) {
             return new Reward(10.0D);
+        } else if (code == MOUNTAIN) {
+            return new Reward(-3.0D);
         } else {
             return new Reward(-0.1D);
         }
     }
-
-    private boolean isDone(Player player) {
-        int code = this.map[player.x][player.y];
+    public boolean isDone(int x, int y) {
+        int code = this.map[x][y];
         if (code == TRAP || code == GOAL) {
             return true;
         } else {
@@ -82,8 +98,12 @@ public class MazeMap {
         }
     }
 
-    public State reset() {
-        this.resetMap();
+    private boolean isDone(Player player) {
+        return isDone(player.x, player.y);
+    }
+
+    public State reset(boolean dp) {
+        this.resetMap(dp);
         return new MazeState(START_X, START_Y);
     }
 

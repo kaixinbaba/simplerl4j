@@ -18,26 +18,43 @@ public class ModelBasedMaze extends Maze implements ModelBasedDispersedEnviromen
     private Map<State, List<StateTransitionProbability>> env = new HashMap<>();
 
     public ModelBasedMaze(int width, int height, long everyStepSleepTime, boolean needRender, boolean isHumanPlay, boolean isSlippery, double unSlipperyProp) {
-        super(width, height, everyStepSleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp);
+        super(width, height, everyStepSleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp, true);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 MazeState s = new MazeState(i, j);
-                MazeMap map = this.getMap();
-                boolean b = map.setState(s);
                 List<StateTransitionProbability> list = new ArrayList<>();
-                for (Action a : this.actionSpace()) {
-                    StepResult step = this.step(a);
-                    StateTransitionProbability stp = new StateTransitionProbability();
-                    stp.setDone(step.isDone());
-                    stp.setNextState(step.getNextState());
-                    stp.setReward(step.getReward().getReward());
-                    // 这里状态转移概率都为1.0
-                    stp.setProp(1.0D);
-                    list.add(stp);
+                if (i == 0 && j == 0) {
+                    // 0, 0
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 0), -0.1D, false));
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(1, 0), -3.0D, false));
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 1), -0.1D, false));
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 0), -0.1D, false));
+                    env.put(s, list);
+                } else if (i == 0 && j == 1) {
+                    // 0, 1
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 0), -0.1D, false));
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(1, 1), -10.0D, true));
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 1), -0.1D, false));
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 1), -0.1D, false));
+
+                    env.put(s, list);
+                } else if (i == 1 && j == 0) {
+                    // 1, 0
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(1, 0), -0.1D, false));
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(1, 0), -0.1D, false));
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(1, 1), -10.0D, true));
+                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 0), -0.1D, false));
+                    env.put(s, list);
+                } else {
+                    // 1, 1
+//                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 0), -0.1D, false));
+//                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 0), -0.1D, false));
+//                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 0), -0.1D, false));
+//                    list.add(new StateTransitionProbability(1.0D, new MazeState(0, 0), -0.1D, false));
                 }
-                env.put(s, list);
             }
         }
+        System.out.println(env);
     }
 
     @Override
@@ -47,6 +64,20 @@ public class ModelBasedMaze extends Maze implements ModelBasedDispersedEnviromen
 
     @Override
     public StateTransitionProbability p(State state, int a) {
-        return this.env.get(state).get(a);
+        List<StateTransitionProbability> stateTransitionProbabilities = this.env.get(state);
+        if (stateTransitionProbabilities == null) {
+            return null;
+        }
+        return stateTransitionProbabilities.get(a);
+    }
+
+    @Override
+    public boolean isDoneState(MazeState state) {
+        return this.getMap().isDone(state.getX(), state.getY());
+    }
+
+    @Override
+    public State reset() {
+        return this.getMap().reset(true);
     }
 }

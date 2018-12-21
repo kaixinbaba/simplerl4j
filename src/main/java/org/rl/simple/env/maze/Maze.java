@@ -1,6 +1,7 @@
 package org.rl.simple.env.maze;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.RandomUtils;
 import org.rl.simple.env.*;
 import org.rl.simple.env.Action;
@@ -24,6 +25,7 @@ public class Maze extends JFrame implements DispersedEnviroment {
     private JPanel panel;
 
     @Getter
+    @Setter
     private MazeMap map;
 
     @Getter
@@ -57,13 +59,16 @@ public class Maze extends JFrame implements DispersedEnviroment {
     public Maze(int width, int height, long everyStepSleepTime, boolean needRender, boolean isHumanPlay) {
         this(width, height, everyStepSleepTime, needRender, isHumanPlay, false, 0.0D);
     }
-
     public Maze(int width, int height, long everyStepSleepTime, boolean needRender, boolean isHumanPlay, boolean isSlippery, double unSlipperyProp) {
-        init(width, height, everyStepSleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp);
+        this(width, height, everyStepSleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp, false);
     }
 
-    private void init(int width, int height, long everyStepSleepTime, boolean needRender, boolean isHumanPlay,
-                      boolean isSlippery, double unSlipperyProp) {
+    public Maze(int width, int height, long everyStepSleepTime, boolean needRender, boolean isHumanPlay, boolean isSlippery, double unSlipperyProp, boolean dp) {
+        init(width, height, everyStepSleepTime, needRender, isHumanPlay, isSlippery, unSlipperyProp, dp);
+    }
+
+    protected void init(int width, int height, long everyStepSleepTime, boolean needRender, boolean isHumanPlay,
+                      boolean isSlippery, double unSlipperyProp, boolean dp) {
         //设置Frame标题
         setTitle("走迷宫");
         //设置窗口背景色
@@ -80,7 +85,7 @@ public class Maze extends JFrame implements DispersedEnviroment {
 
         this.mazeWidth = width;
         this.mazeHeight = height;
-        this.map = new MazeMap(width, height);
+        this.map = new MazeMap(width, height, dp);
         this.panel = new MazePanel(this.map);
         this.setContentPane(this.panel);
         this.actionSpace = new Action[]{
@@ -99,7 +104,7 @@ public class Maze extends JFrame implements DispersedEnviroment {
 
     @Override
     public State reset() {
-        return this.map.reset();
+        return this.map.reset(false);
     }
 
     @Override

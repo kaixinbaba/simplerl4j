@@ -6,6 +6,7 @@ public enum Algorithm {
     SARSA("sarsa"),
     SARSA_EXPECTED("sarsa-expected"),
     DYNAMIC_PROGRAMMING("dp"),
+    MONTE_CARLO("mc"),
     DQN("dqn"),
     DPG("dpg");
 

@@ -13,7 +13,7 @@ public class MazeState implements State {
 
     @Override
     public int hashCode() {
-        return this.x * 100 + this.y;
+        return this.x * 100 + this.y * 10;
     }
 
     @Override

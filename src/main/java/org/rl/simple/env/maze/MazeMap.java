@@ -86,7 +86,7 @@ public class MazeMap {
         } else if (code == MOUNTAIN) {
             return new Reward(-3.0D);
         } else {
-            return new Reward(-0.1D);
+            return new Reward(-1.0D);
         }
     }
     public boolean isDone(int x, int y) {

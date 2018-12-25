@@ -23,7 +23,7 @@ public class TestMazeEnvByMC {
         int height = 4;
         int minStepCount = width + height - 2;
         double allowError = 0.5D;
-        long sleepTime = 50L;
+        long sleepTime = 20L;
         boolean needRender = true;
         boolean isHumanPlay = false;
         boolean isSlippery = false;

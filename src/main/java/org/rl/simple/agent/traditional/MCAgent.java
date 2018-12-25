@@ -37,7 +37,7 @@ public class MCAgent implements Agent {
     private List<Episode> episodes = new ArrayList<>();
 
     public MCAgent(DispersedEnviroment enviroment, Object... args) {
-        this(enviroment, 1.0D, 0.1D, EPSILON_MIN, 0.1D, 0.9D, args);
+        this(enviroment, 1.0D, 0.01D, 0.1D, 0.1D, 0.9D, args);
     }
 
     public MCAgent(DispersedEnviroment enviroment, double epsilonStart, double epsilonDecay,
@@ -165,7 +165,7 @@ public class MCAgent implements Agent {
             Episode e = this.episodes.get(i);
             StateAction sa = new StateAction(e.getState(), e.getAction());
             // just first visit
-            if (result.containsKey(sa) && this.isFirstVisit) {
+            if (result.containsKey(sa) && !this.isFirstVisit) {
                 continue;
                 // TODO every visit
             } else {
@@ -178,9 +178,11 @@ public class MCAgent implements Agent {
 
     private Double getTotalQvalue(int i, List<Episode> episodes) {
         Double totalReward = 0.0D;
+        int gammaPow = 0;
         for (int j = i; j < episodes.size(); j++) {
             Episode e = this.episodes.get(j);
-            totalReward += e.getReward();
+            totalReward += Math.pow(this.gamma, gammaPow) * e.getReward();
+            gammaPow++;
         }
         return totalReward;
     }

@@ -20,10 +20,7 @@ public class JUnitTest {
 
     @Test
     public void test1() {
-        for (int i = 0; i < 10; i++) {
-            System.out.println(RandomUtils.nextInt(0, 2));
-
-        }
+        System.out.println(Math.pow(3, 2.2));
     }
     @Test
     public void testToFile() throws IOException {

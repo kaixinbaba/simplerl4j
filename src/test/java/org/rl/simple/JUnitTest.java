@@ -41,4 +41,48 @@ public class JUnitTest {
         Map<String, Object> stringObjectHashMap = JsonSerilizable.deserilizableForMapFromFile("test.json");
         System.out.println(stringObjectHashMap);
     }
+    @Test
+    public void test3() {
+//        System.out.println("hello world");
+        String s = "finance-product-prod.properties";
+        System.out.println(getSourceFileName(s));
+    }
+
+    public static String getSourceFileName(String withEnvFileName) {
+        return withEnvFileName.replaceAll("-(dev|staging|prod)\\.properties", ".properties");
+    }
+
+    /**
+     *
+     * @param sourceFileName like xxx-trade.properties
+     * @return xxx-trade-{env}.properties
+     */
+    public static String getFileNameWithEnv(String sourceFileName, String env) {
+        return sourceFileName.replaceAll("\\.", String.format("-%s.", env));
+    }
+
+
+
+    @Test
+    public void test2() {
+        System.out.println("dkjfk");
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
